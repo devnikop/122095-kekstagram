@@ -1,7 +1,8 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Николай Петров](https://up.htmlacademy.ru/javascript/16/user/122095).
-* Наставник: `Неизвестно`.
+* Наставник: [Виталий Яковенко]
+(https://htmlacademy.ru/profile/id376639).
 
 ---
 
