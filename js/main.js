@@ -33,17 +33,17 @@ var pickRandomValue = function (value1, value2) {
   return result;
 };
 
-var createComment = function (index, arrayOfComments, arrayOfFirstNames) {
+var createComment = function (arrayOfComments, arrayOfFirstNames) {
   var commentObject = {
     avatar: 'img/avatar-' + pickRandomValue(1, 6) + '.svg',
-    message: [],
+    message: '',
     name: pickRandomValue(arrayOfFirstNames),
 
     messagesCreate: function () {
       if (pickRandomValue(1, 2) === 1) {
-        this.message[index] = pickRandomValue(arrayOfComments);
+        this.message = pickRandomValue(arrayOfComments);
       } else {
-        this.message[index] = pickRandomValue(arrayOfComments) + ' ' + pickRandomValue(arrayOfComments);
+        this.message = pickRandomValue(arrayOfComments) + ' ' + pickRandomValue(arrayOfComments);
       }
     }
   };
@@ -63,7 +63,7 @@ var generatePictureArray = function (arrayOfComments, arrayOfFirstNames) {
 
       commentsCreate: function () {
         for (var j = 0; j < this.countOfMessages; j++) {
-          this.comments[j] = createComment(j, arrayOfComments, arrayOfFirstNames);
+          this.comments[j] = createComment(arrayOfComments, arrayOfFirstNames);
         }
       },
     };
@@ -77,74 +77,67 @@ var arrayOfPictures = generatePictureArray(COMMENTS, FIRST_NAMES);
 
 //  Finished first task  //
 
-// var generateElement = function (template, substituteObject) {
-//   var element = template.cloneNode(true);
+var generateElement = function (template, substitutionalObject) {
+  var element = template.cloneNode(true);
 
-//   element.querySelector('.picture__img').src = substituteObject.url;
-//   element.querySelector('.picture__likes').textContent = substituteObject.countOfLikes;
-//   element.querySelector('.picture__comments').textContent = substituteObject.countOfMessages;
-//   return element;
-// };
+  element.querySelector('.picture__img').src = substitutionalObject.url;
+  element.querySelector('.picture__likes').textContent = substitutionalObject.countOfLikes;
+  element.querySelector('.picture__comments').textContent = substitutionalObject.countOfMessages;
+  return element;
+};
 
-// var addInFragment = function (objects, template) {
-//   var fragment = document.createDocumentFragment();
-//   for (var i = 0; i < objects.length; i++) {
-//     fragment.appendChild(generateElement(template, objects[i]));
-//   }
-//   return fragment;
-// };
+var addPicturesInFragment = function (objects, template) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < objects.length; i++) {
+    fragment.appendChild(generateElement(template, objects[i]));
+  }
+  return fragment;
+};
 
-// var drawPictures = function (pictures, picturesContainer) {
-//   picturesContainer.appendChild(pictures);
-// };
+var drawPictures = function (pictures, picturesContainer) {
+  picturesContainer.appendChild(pictures);
+};
 
-// var pictureTemplate = document.querySelector('#picture').content;
-// var picturesContainer = document.querySelector('.pictures');
+var pictureTemplate = document.querySelector('#picture').content;
+var picturesContainer = document.querySelector('.pictures');
 
-// drawPictures(addInFragment(arrayOfPictures, pictureTemplate), picturesContainer);
-
-
+drawPictures(addPicturesInFragment(arrayOfPictures, pictureTemplate), picturesContainer);
 
 //  Finished second & third tasks  //
 
+var bigPicture = document.querySelector('.big-picture');
+bigPicture.classList.remove('hidden');
 
-// var addInFragment = function (arr) {
-//   var fragment = document.createDocumentFragment();
-//   for (var k = 0; k < arr.length; k++) {
-//     fragment.appendChild(generatePicture(arr[k]));
-//   }
-//   return fragment;
-// };
+var generateComment = function (template, substitutionalObject) {
+  var commentElement = template.cloneNode(true);
 
+  commentElement.querySelector('.social__picture').src = substitutionalObject.avatar;
+  commentElement.querySelector('.social__text').textContent = substitutionalObject.message;
+  return commentElement;
+};
 
-// var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
+var addInFragmentComment = function (template, picture) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < picture.comments.length; i++) {
+    fragment.appendChild(generateComment(template, picture.comments[i]));
+  }
+  return fragment;
+};
 
-// // need to replace in fragment
-// bigPicture.querySelector('.big-picture__img img').src = pictureObjects[0].url;
-// bigPicture.querySelector('.likes-count').textContent = pictureObjects[0].likes;
-// bigPicture.querySelector('.comments-count').textContent = pictureObjects[0].comments.messagesCount;
+var addBigPicture = function (picture, container) {
+  bigPicture.querySelector('.big-picture__img img').src = picture.url;
+  bigPicture.querySelector('.likes-count').textContent = picture.countOfLikes;
+  bigPicture.querySelector('.comments-count').textContent = picture.countOfMessages;
 
-// var commentTemplate = document.querySelector('#comment').content;
-// var comentsContainer = document.querySelector('.social__comments');
+  container.appendChild(addInFragmentComment(commentTemplate, picture));
+};
 
-// var generateComment = function (commentObj) {
-//   var commentElement = commentTemplate.cloneNode(true);
+var commentTemplate = document.querySelector('#comment').content;
+var comentsContainer = document.querySelector('.social__comments');
 
-//   commentElement.querySelector('.social__picture').src = commentObj.comments.avatar;
-//   commentElement.querySelector('.social__text').textContent = commentObj.comments.message;
-//   return commentElement;
-// };
+addBigPicture(arrayOfPictures[0], comentsContainer);
 
+//  Finished fourth task  //
 
-// var addInFragmentComment = function () {
-//   var fragment = document.createDocumentFragment();
-//   for (var j = 0; j < pictureObjects.length; j++) {
-//     fragment.appendChild(generateComment(pictureObjects[pickRandomValue(1, pictureObjects.length)]));
-//   }
-//   return fragment;
-// };
-
-
-// document.querySelector('.social__comment-count').classList.add('visually-hidden');
-// document.querySelector('.comments-loader').classList.add('visually-hidden');
+document.querySelector('.social__comment-count').classList.add('visually-hidden');
+document.querySelector('.comments-loader').classList.add('visually-hidden');
