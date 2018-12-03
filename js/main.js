@@ -63,7 +63,7 @@ var generateArrayOfPictures = function () {
       url: 'photos/' + [i + 1] + '.jpg',
       description: 'Описание фотографии',
       countOfLikes: chooseRandomFromTheRange(15, 200),
-      countOfComments: countOfComments,
+      countOfComments: comments.length,
       comments: comments
     };
     arrayOfPictures[i] = pictureObject;
@@ -72,6 +72,7 @@ var generateArrayOfPictures = function () {
 };
 
 var generateNodeOfPicture = function (substitutionalObject) {
+  var pictureTemplate = document.querySelector('#picture').content;
   var element = pictureTemplate.cloneNode(true);
 
   element.querySelector('.picture__img').src = substitutionalObject.url;
@@ -88,11 +89,8 @@ var addPicturesInFragment = function (substitutionalObjects) {
   return fragment;
 };
 
-var drawPictures = function (pictures) {
-  containerForPictures.appendChild(pictures);
-};
-
 var generateNodeOfComments = function (substitutionalObject) {
+  var commentTemplate = document.querySelector('#comment').content;
   var element = commentTemplate.cloneNode(true);
 
   element.querySelector('.social__picture').src = substitutionalObject.avatar;
@@ -109,27 +107,24 @@ var addBigPictureInFragment = function (substitutionalObject) {
 };
 
 var addBigPicture = function (picture) {
+  var bigPicture = document.querySelector('.big-picture');
+  bigPicture.classList.remove('hidden');
+
   bigPicture.querySelector('.big-picture__img img').src = picture.url;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
   bigPicture.querySelector('.likes-count').textContent = picture.countOfLikes;
   bigPicture.querySelector('.comments-count').textContent = picture.countOfComments;
 
+  var comentsContainer = document.querySelector('.social__comments');
   comentsContainer.appendChild(addBigPictureInFragment(picture.comments));
 };
 
 
 var arrayOfPictures = generateArrayOfPictures();
 
-var pictureTemplate = document.querySelector('#picture').content;
 var containerForPictures = document.querySelector('.pictures');
 
-drawPictures(addPicturesInFragment(arrayOfPictures));
-
-var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
-
-var commentTemplate = document.querySelector('#comment').content;
-var comentsContainer = document.querySelector('.social__comments');
+containerForPictures.appendChild(addPicturesInFragment(arrayOfPictures));
 
 addBigPicture(arrayOfPictures[0]);
 
