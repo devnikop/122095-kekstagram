@@ -22,28 +22,25 @@ var FIRST_NAMES = [
   'Вашингтон'
 ];
 
-var pickRandomValue = function (value1, value2) {
-  var result;
-  if (Array.isArray(arguments[0])) {
-    result = value1[Math.floor(Math.random() * value1.length)];
-  } else if (arguments[1]) {
-    result = Math.floor(Math.random() * (value2 - value1 + 1) + value1);
-  }
+var chooseRandomFromTheRange = function (value1, value2) {
+  return Math.floor(Math.random() * (value2 - value1 + 1) + value1);
+};
 
-  return result;
+var chooseRandomArrayValue = function (value1) {
+  return value1[Math.floor(Math.random() * value1.length)];
 };
 
 var createComment = function (arrayOfCommentText, arrayOfFirstNames) {
   var commentObject = {
-    avatar: 'img/avatar-' + pickRandomValue(1, 6) + '.svg',
+    avatar: 'img/avatar-' + chooseRandomFromTheRange(1, 6) + '.svg',
     message: '',
-    name: pickRandomValue(arrayOfFirstNames),
+    name: chooseRandomArrayValue(arrayOfFirstNames),
 
     messagesCreate: function () {
-      if (pickRandomValue(1, 2) === 1) {
-        this.message = pickRandomValue(arrayOfCommentText);
+      if (chooseRandomFromTheRange(1, 2) === 1) {
+        this.message = chooseRandomArrayValue(arrayOfCommentText);
       } else {
-        this.message = pickRandomValue(arrayOfCommentText) + ' ' + pickRandomValue(arrayOfCommentText);
+        this.message = chooseRandomArrayValue(arrayOfCommentText) + ' ' + chooseRandomArrayValue(arrayOfCommentText);
       }
     }
   };
@@ -58,8 +55,8 @@ var generateArrayOfPictures = function (arrayOfCommentText, arrayOfFirstNames) {
     var pictureObject = {
       url: 'photos/' + [i + 1] + '.jpg',
       description: 'Описание фотографии',
-      countOfLikes: pickRandomValue(15, 200),
-      countOfMessages: pickRandomValue(2, 5),
+      countOfLikes: chooseRandomFromTheRange(15, 200),
+      countOfMessages: chooseRandomFromTheRange(2, 5),
       comments: [],
 
       commentsCreate: function () {
