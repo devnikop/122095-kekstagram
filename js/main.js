@@ -118,6 +118,7 @@ var addBigPicture = function (bigPicture, picture) {
 
 var openBigPicture = function () {
   bigPicture.classList.remove('hidden');
+  document.body.classList.add('modal-open');
 
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
   bigPictureCancel.addEventListener('click', closeBigPicture);
@@ -127,6 +128,7 @@ var openBigPicture = function () {
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
   document.removeEventListener('keydown', onBigPictureEscPress);
+  document.body.classList.remove('modal-open');
 };
 
 var onBigPictureEscPress = function (evt) {
@@ -142,7 +144,6 @@ var onClickPicture = function (pictureElement, arrayOfPictures, bigPicture) {
       if (pictureImg.attributes.src.nodeValue === arrayOfPictures[i].url) {
         openBigPicture();
         addBigPicture(bigPicture, arrayOfPictures[i]);
-        document.body.classList.add('modal-open');
         break;
       }
     }
@@ -169,6 +170,32 @@ var onUploadImgEscPress = function (evt) {
   }
 };
 
+var moveSlider = function (pinCoord, depthCoord) {
+  effectLevelPin.style.left = pinCoord + '%';
+  effectLevelDepth.style.width = depthCoord + '%';
+};
+
+var changeFilter = function (effectClass) {
+  imgUploadPreview.className = '';
+  imgUploadPreview.style.filter = '';
+  imgUploadPreview.classList.add(effectClass);
+};
+
+var onChangeEffect = function (effectsRadio) {
+  var effectsPreview = effectsRadio.parentElement.querySelector('.effects__preview');
+  effectsRadio.addEventListener('change', function () {
+    changeFilter(effectsPreview.classList[1]);
+    moveSlider(100, 100);
+
+    var effectLevel = imgUploadOverlay.querySelector('.effect-level');
+    if (imgUploadPreview.classList.contains('effects__preview--none')) {
+      effectLevel.classList.add('hidden');
+    } else {
+      effectLevel.classList.remove('hidden');
+    }
+  });
+};
+
 
 var arrayOfPictures = generateArrayOfPictures();
 
@@ -181,10 +208,40 @@ for (var i = 0; i < pictureElements.length; i++) {
   onClickPicture(pictureElements[i], arrayOfPictures, bigPicture);
 }
 
+document.querySelector('.social__comment-count').classList.add('visually-hidden');
+document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+
 var uploadFile = containerForPictures.querySelector('#upload-file');
 var imgUploadOverlay = containerForPictures.querySelector('.img-upload__overlay');
 uploadFile.addEventListener('change', openUploadImg);
 
+var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview > img');
 
-document.querySelector('.social__comment-count').classList.add('visually-hidden');
-document.querySelector('.comments-loader').classList.add('visually-hidden');
+var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
+for (var j = 0; j < effectsRadio.length; j++) {
+  onChangeEffect(effectsRadio[j]);
+}
+
+var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+var effectLevelLineWidth = imgUploadOverlay.querySelector('.effect-level__line').offsetWidth;
+
+effectLevelPin.addEventListener('mouseup', function () {
+  var pinCoord = Math.round(effectLevelPin.offsetLeft / (effectLevelLineWidth / 100));
+
+  if (imgUploadPreview.classList.contains('effects__preview--chrome')) {
+    imgUploadPreview.style.filter = 'grayscale(' + pinCoord / 100 + ')';
+  } else if (imgUploadPreview.classList.contains('effects__preview--sepia')) {
+    imgUploadPreview.style.filter = 'sepia(' + pinCoord / 100 + ')';
+  } else if (imgUploadPreview.classList.contains('effects__preview--marvin')) {
+    imgUploadPreview.style.filter = 'invert(' + pinCoord + '%)';
+  } else if (imgUploadPreview.classList.contains('effects__preview--phobos')) {
+    var pinCoordBlur = Math.round(effectLevelPin.offsetLeft / (effectLevelLineWidth / 300));
+    imgUploadPreview.style.filter = 'blur(' + pinCoordBlur / 100 + 'px)';
+  } else if (imgUploadPreview.classList.contains('effects__preview--heat')) {
+    var pinCoordBrightness = Math.round(effectLevelPin.offsetLeft / (effectLevelLineWidth / 200));
+    imgUploadPreview.style.filter = 'brightness(' + ((pinCoordBrightness / 100) + 1) + ')';
+  }
+});
+
