@@ -71,20 +71,22 @@ var generateArrayOfPictures = function () {
   return arrayOfPictures;
 };
 
-var generateNodeOfPicture = function (substitutionalObject) {
+var generateNodeOfPicture = function (substitutionalObject, bigPicture) {
   var pictureTemplate = document.querySelector('#picture').content;
   var element = pictureTemplate.cloneNode(true);
 
   element.querySelector('.picture__img').src = substitutionalObject.url;
   element.querySelector('.picture__likes').textContent = substitutionalObject.countOfLikes;
   element.querySelector('.picture__comments').textContent = substitutionalObject.countOfComments;
+
+  onClickPicture(element.children[0], bigPicture, substitutionalObject);
   return element;
 };
 
-var addPicturesInFragment = function (substitutionalObjects) {
+var addPicturesInFragment = function (substitutionalObjects, bigPicture) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < substitutionalObjects.length; i++) {
-    fragment.appendChild(generateNodeOfPicture(substitutionalObjects[i]));
+    fragment.appendChild(generateNodeOfPicture(substitutionalObjects[i], bigPicture));
   }
   return fragment;
 };
@@ -98,7 +100,7 @@ var generateNodeOfComments = function (substitutionalObject) {
   return element;
 };
 
-var addBigPictureInFragment = function (substitutionalObject) {
+var addCommentsInBigPicture = function (substitutionalObject) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < substitutionalObject.length; i++) {
     fragment.appendChild(generateNodeOfComments(substitutionalObject[i]));
@@ -106,17 +108,27 @@ var addBigPictureInFragment = function (substitutionalObject) {
   return fragment;
 };
 
-var addBigPicture = function (bigPicture, picture) {
-  bigPicture.querySelector('.big-picture__img img').src = picture.url;
-  bigPicture.querySelector('.social__caption').textContent = picture.description;
-  bigPicture.querySelector('.likes-count').textContent = picture.countOfLikes;
-  bigPicture.querySelector('.comments-count').textContent = picture.countOfComments;
-
-  var comentsContainer = document.querySelector('.social__comments');
-  comentsContainer.appendChild(addBigPictureInFragment(picture.comments));
+var onClickPicture = function (pictureElement, bigPicture, substitutionalObject) {
+  pictureElement.addEventListener('click', function () {
+    openBigPicture(bigPicture);
+    addBigPicture(bigPicture, substitutionalObject);
+  });
 };
 
-var openBigPicture = function () {
+var addBigPicture = function (bigPicture, substitutionalObject) {
+  bigPicture.querySelector('.big-picture__img img').src = substitutionalObject.url;
+  bigPicture.querySelector('.social__caption').textContent = substitutionalObject.description;
+  bigPicture.querySelector('.likes-count').textContent = substitutionalObject.countOfLikes;
+  bigPicture.querySelector('.comments-count').textContent = substitutionalObject.countOfComments;
+
+  var comentsContainer = document.querySelector('.social__comments');
+  while (comentsContainer.firstChild) {
+    comentsContainer.firstChild.remove();
+  }
+  comentsContainer.appendChild(addCommentsInBigPicture(substitutionalObject.comments));
+};
+
+var openBigPicture = function (bigPicture) {
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
@@ -135,19 +147,6 @@ var onBigPictureEscPress = function (evt) {
   if (evt.keyCode === 27) {
     closeBigPicture();
   }
-};
-
-var onClickPicture = function (pictureElement, arrayOfPictures, bigPicture) {
-  pictureElement.addEventListener('click', function () {
-    var pictureImg = pictureElement.querySelector('.picture__img');
-    for (var i = 0; i < arrayOfPictures.length; i++) {
-      if (pictureImg.attributes.src.nodeValue === arrayOfPictures[i].url) {
-        openBigPicture();
-        addBigPicture(bigPicture, arrayOfPictures[i]);
-        break;
-      }
-    }
-  });
 };
 
 var openUploadImg = function () {
@@ -200,13 +199,8 @@ var onChangeEffect = function (effectsRadio) {
 var arrayOfPictures = generateArrayOfPictures();
 
 var containerForPictures = document.querySelector('.pictures');
-containerForPictures.appendChild(addPicturesInFragment(arrayOfPictures));
-
 var bigPicture = document.querySelector('.big-picture');
-var pictureElements = containerForPictures.querySelectorAll('.picture');
-for (var i = 0; i < pictureElements.length; i++) {
-  onClickPicture(pictureElements[i], arrayOfPictures, bigPicture);
-}
+containerForPictures.appendChild(addPicturesInFragment(arrayOfPictures, bigPicture));
 
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
