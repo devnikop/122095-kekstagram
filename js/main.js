@@ -71,9 +71,7 @@ var generateArrayOfPictures = function () {
   return arrayOfPictures;
 };
 
-var generateNodeOfPicture = function (picture, bigPictureElement) {
-  var pictureTemplate = document.querySelector('#picture').content;
-  var pictureElement = pictureTemplate.cloneNode(true);
+var generateNodeOfPicture = function (pictureElement, picture, bigPictureElement) {
 
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__likes').textContent = picture.countOfLikes;
@@ -89,8 +87,11 @@ var generateNodeOfPicture = function (picture, bigPictureElement) {
 
 var addPicturesInFragment = function (pictures, bigPictureElement) {
   var fragment = document.createDocumentFragment();
+  var pictureTemplate = document.querySelector('#picture').content;
+
   for (var i = 0; i < pictures.length; i++) {
-    fragment.appendChild(generateNodeOfPicture(pictures[i], bigPictureElement));
+    var pictureElement = pictureTemplate.cloneNode(true);
+    fragment.appendChild(generateNodeOfPicture(pictureElement, pictures[i], bigPictureElement));
   }
   return fragment;
 };
