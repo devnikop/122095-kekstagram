@@ -71,74 +71,71 @@ var generateArrayOfPictures = function () {
   return arrayOfPictures;
 };
 
-var generateNodeOfPicture = function (substitutionalObject, bigPicture) {
+var generateNodeOfPicture = function (picture, bigPictureElement) {
   var pictureTemplate = document.querySelector('#picture').content;
-  var element = pictureTemplate.cloneNode(true);
+  var pictureElement = pictureTemplate.cloneNode(true);
 
-  element.querySelector('.picture__img').src = substitutionalObject.url;
-  element.querySelector('.picture__likes').textContent = substitutionalObject.countOfLikes;
-  element.querySelector('.picture__comments').textContent = substitutionalObject.countOfComments;
+  pictureElement.querySelector('.picture__img').src = picture.url;
+  pictureElement.querySelector('.picture__likes').textContent = picture.countOfLikes;
+  pictureElement.querySelector('.picture__comments').textContent = picture.countOfComments;
 
-  onClickPicture(element.children[0], bigPicture, substitutionalObject);
-  return element;
-};
-
-var addPicturesInFragment = function (substitutionalObjects, bigPicture) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < substitutionalObjects.length; i++) {
-    fragment.appendChild(generateNodeOfPicture(substitutionalObjects[i], bigPicture));
-  }
-  return fragment;
-};
-
-var generateNodeOfComments = function (substitutionalObject) {
-  var commentTemplate = document.querySelector('#comment').content;
-  var element = commentTemplate.cloneNode(true);
-
-  element.querySelector('.social__picture').src = substitutionalObject.avatar;
-  element.querySelector('.social__text').textContent = substitutionalObject.message;
-  return element;
-};
-
-var addCommentsInBigPicture = function (substitutionalObject) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < substitutionalObject.length; i++) {
-    fragment.appendChild(generateNodeOfComments(substitutionalObject[i]));
-  }
-  return fragment;
-};
-
-var onClickPicture = function (pictureElement, bigPicture, substitutionalObject) {
-  pictureElement.addEventListener('click', function () {
-    openBigPicture(bigPicture);
-    addBigPicture(bigPicture, substitutionalObject);
+  pictureElement.querySelector('.picture').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    openBigPicture(bigPictureElement);
+    addBigPicture(bigPictureElement, picture);
   });
+  return pictureElement;
 };
 
-var addBigPicture = function (bigPicture, substitutionalObject) {
-  bigPicture.querySelector('.big-picture__img img').src = substitutionalObject.url;
-  bigPicture.querySelector('.social__caption').textContent = substitutionalObject.description;
-  bigPicture.querySelector('.likes-count').textContent = substitutionalObject.countOfLikes;
-  bigPicture.querySelector('.comments-count').textContent = substitutionalObject.countOfComments;
+var addPicturesInFragment = function (pictures, bigPictureElement) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < pictures.length; i++) {
+    fragment.appendChild(generateNodeOfPicture(pictures[i], bigPictureElement));
+  }
+  return fragment;
+};
 
-  var comentsContainer = document.querySelector('.social__comments');
+var generateNodeOfComments = function (commentElement, pictureComment) {
+  commentElement.querySelector('.social__picture').src = pictureComment.avatar;
+  commentElement.querySelector('.social__text').textContent = pictureComment.message;
+  return commentElement;
+};
+
+var addCommentsInBigPicture = function (pictureComments) {
+  var fragment = document.createDocumentFragment();
+  var commentTemplate = document.querySelector('#comment').content;
+
+  for (var i = 0; i < pictureComments.length; i++) {
+    var commentElement = commentTemplate.cloneNode(true);
+    fragment.appendChild(generateNodeOfComments(commentElement, pictureComments[i]));
+  }
+  return fragment;
+};
+
+var addBigPicture = function (bigPictureElement, picture) {
+  bigPictureElement.querySelector('.big-picture__img img').src = picture.url;
+  bigPictureElement.querySelector('.social__caption').textContent = picture.description;
+  bigPictureElement.querySelector('.likes-count').textContent = picture.countOfLikes;
+  bigPictureElement.querySelector('.comments-count').textContent = picture.countOfComments;
+
+  var comentsContainer = bigPictureElement.querySelector('.social__comments');
   while (comentsContainer.firstChild) {
     comentsContainer.firstChild.remove();
   }
-  comentsContainer.appendChild(addCommentsInBigPicture(substitutionalObject.comments));
+  comentsContainer.appendChild(addCommentsInBigPicture(picture.comments));
 };
 
-var openBigPicture = function (bigPicture) {
-  bigPicture.classList.remove('hidden');
+var openBigPicture = function (bigPictureElement) {
+  bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  var bigPictureCancel = document.querySelector('.big-picture__cancel');
+  var bigPictureCancel = bigPictureElement.querySelector('.big-picture__cancel');
   bigPictureCancel.addEventListener('click', closeBigPicture);
   document.addEventListener('keydown', onBigPictureEscPress);
 };
 
 var closeBigPicture = function () {
-  bigPicture.classList.add('hidden');
+  bigPictureElement.classList.add('hidden');
   document.removeEventListener('keydown', onBigPictureEscPress);
   document.body.classList.remove('modal-open');
 };
@@ -198,16 +195,16 @@ var onChangeEffect = function (effectsRadio) {
 
 var arrayOfPictures = generateArrayOfPictures();
 
-var containerForPictures = document.querySelector('.pictures');
-var bigPicture = document.querySelector('.big-picture');
-containerForPictures.appendChild(addPicturesInFragment(arrayOfPictures, bigPicture));
+var containerForPicturesElement = document.querySelector('.pictures');
+var bigPictureElement = document.querySelector('.big-picture');
+containerForPicturesElement.appendChild(addPicturesInFragment(arrayOfPictures, bigPictureElement));
 
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
 
-var uploadFile = containerForPictures.querySelector('#upload-file');
-var imgUploadOverlay = containerForPictures.querySelector('.img-upload__overlay');
+var uploadFile = containerForPicturesElement.querySelector('#upload-file');
+var imgUploadOverlay = containerForPicturesElement.querySelector('.img-upload__overlay');
 uploadFile.addEventListener('change', openUploadImg);
 
 var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview > img');
