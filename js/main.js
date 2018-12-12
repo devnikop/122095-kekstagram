@@ -124,8 +124,19 @@ var addBigPicture = function (bigPictureElement, picture) {
 };
 
 var openBigPicture = function (bigPictureElement) {
+  var closeBigPicture = function () {
+    bigPictureElement.remove();
+    document.removeEventListener('keydown', onBigPictureEscPress);
+    document.body.classList.remove('modal-open');
+  };
+
+  var onBigPictureEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      closeBigPicture();
+    }
+  };
+
   document.querySelector('main').appendChild(bigPictureElement);
-  bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
   var bigPictureCancel = bigPictureElement.querySelector('.big-picture__cancel');
@@ -136,25 +147,11 @@ var openBigPicture = function (bigPictureElement) {
   document.querySelector('.comments-loader').classList.add('visually-hidden');
 };
 
-var closeBigPicture = function () {
-  var bigPictureElement = document.querySelector('.big-picture');
-  bigPictureElement.remove();
-  document.removeEventListener('keydown', onBigPictureEscPress);
-  document.body.classList.remove('modal-open');
-};
-
-var onBigPictureEscPress = function (evt) {
-  if (evt.keyCode === 27) {
-    closeBigPicture();
-  }
-};
-
 var openUploadImg = function () {
   var imgUploadOverlayTemplate = document.querySelector('.img-upload__overlay-template').content.cloneNode(true);
   var imgUploadForm = containerForPicturesElement.querySelector('.img-upload__form');
   imgUploadForm.appendChild(imgUploadOverlayTemplate);
   var imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
-  imgUploadOverlay.classList.remove('hidden');
 
   var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview > img');
   var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
@@ -184,22 +181,21 @@ var openUploadImg = function () {
     }
   });
 
+  var closeUploadImg = function () {
+    imgUploadOverlay.remove();
+    uploadFile.value = '';
+    document.removeEventListener('keydown', onUploadImgEscPress);
+  };
+
+  var onUploadImgEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      closeUploadImg();
+    }
+  };
+
   var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
   imgUploadCancel.addEventListener('click', closeUploadImg);
   document.addEventListener('keydown', onUploadImgEscPress);
-};
-
-var closeUploadImg = function () {
-  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
-  imgUploadOverlay.remove();
-  uploadFile.value = '';
-  document.removeEventListener('keydown', onUploadImgEscPress);
-};
-
-var onUploadImgEscPress = function (evt) {
-  if (evt.keyCode === 27) {
-    closeUploadImg();
-  }
 };
 
 var moveSlider = function (effectLevelPin, effectLevelDepth, pinCoord, depthCoord) {
