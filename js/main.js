@@ -196,6 +196,33 @@ var openUploadImg = function () {
   var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
   imgUploadCancel.addEventListener('click', closeUploadImg);
   document.addEventListener('keydown', onUploadImgEscPress);
+
+  var zoomOutElement = imgUploadOverlay.querySelector('.scale__control--smaller');
+  var zoomInElement = imgUploadOverlay.querySelector('.scale__control--bigger');
+  var scaleControlValueElement = imgUploadOverlay.querySelector('.scale__control--value');
+  var scaleControlValue = parseInt(scaleControlValueElement.value, 10);
+
+  var onClickZoomOutElement = function () {
+    if (scaleControlValue > 25 && scaleControlValue <= 100) {
+      scaleControlValue -= 25;
+      updateUploadImageScale();
+    }
+  };
+
+  var onClickZoomInElement = function () {
+    if (scaleControlValue >= 25 && scaleControlValue < 100) {
+      scaleControlValue += 25;
+      updateUploadImageScale();
+    }
+  };
+
+  var updateUploadImageScale = function () {
+    scaleControlValueElement.value = scaleControlValue + '%';
+    imgUploadPreview.style.transform = ('scale(' + scaleControlValue / 100 + ')');
+  };
+
+  zoomOutElement.addEventListener('click', onClickZoomOutElement);
+  zoomInElement.addEventListener('click', onClickZoomInElement);
 };
 
 var moveSlider = function (effectLevelPin, effectLevelDepth, pinCoord, depthCoord) {
