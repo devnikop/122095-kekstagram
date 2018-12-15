@@ -197,7 +197,7 @@ var openUploadImg = function () {
   };
 
   var onUploadImgEscPress = function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === 27 && (document.activeElement !== textHashtagsElement) && (document.activeElement !== textDescriptionElement)) {
       closeUploadImg();
     }
   };
@@ -221,6 +221,48 @@ var openUploadImg = function () {
     imgUploadPreview.style.transform = ('scale(' + scaleControlValue / 100 + ')');
   };
 
+  var setInvalid = function (validityMessage) {
+    textHashtagsElement.setCustomValidity(validityMessage);
+    textHashtagsElement.style.borderColor = 'red';
+  };
+
+  var setValid = function () {
+    textHashtagsElement.setCustomValidity('');
+    textHashtagsElement.style.borderColor = 'initial';
+  };
+
+  var hashtagValidate = function () {
+    var hashtagsArray = textHashtagsElement.value.trim().toLowerCase().split(' ');
+    if (hashtagsArray[0] !== '') {
+      if (hashtagsArray.length > 5) {
+        setInvalid('Нельзя указать больше пяти хэш-тегов');
+      } else {
+        for (var i = 0; i < hashtagsArray.length; i++) {
+          if (hashtagsArray[i].charAt(0) !== '#') {
+            setInvalid('Хэш-тег должен начинаться с символа #');
+            break;
+          } else if (hashtagsArray[i].charAt(1) === '') {
+            setInvalid('Хэш-тег не может состоять только из одной решётки');
+            break;
+          } else if (hashtagsArray.indexOf(hashtagsArray[i], i + 1) !== -1) {
+            setInvalid('Один и тот же хэш-тег не может быть использован дважды');
+            break;
+          } else if (hashtagsArray[i].indexOf('#', 1) !== -1) {
+            setInvalid('Хэш-тег не должен содержать более одного символа #');
+            break;
+          } else if (hashtagsArray[i].length > 20) {
+            setInvalid('Максимальная длина одного хэш-тега 20 символов, включая решётку');
+            break;
+          } else {
+            setValid();
+          }
+        }
+      }
+    } else {
+      setValid();
+    }
+  };
+
   var imgUploadOverlayTemplate = document.querySelector('.img-upload__overlay-template').content.cloneNode(true);
   var imgUploadForm = containerForPicturesElement.querySelector('.img-upload__form');
   imgUploadForm.appendChild(imgUploadOverlayTemplate);
@@ -239,8 +281,11 @@ var openUploadImg = function () {
   }
 
   var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
+  var textHashtagsElement = imgUploadOverlay.querySelector('.text__hashtags');
+  var textDescriptionElement = imgUploadOverlay.querySelector('.text__description');
   imgUploadCancel.addEventListener('click', closeUploadImg);
   document.addEventListener('keydown', onUploadImgEscPress);
+  textHashtagsElement.addEventListener('input', hashtagValidate);
 
   var zoomOutElement = imgUploadOverlay.querySelector('.scale__control--smaller');
   var zoomInElement = imgUploadOverlay.querySelector('.scale__control--bigger');
