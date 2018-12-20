@@ -198,18 +198,16 @@ var openUploadImg = function () {
     var mousemoveEffectLevelPin = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var shiftX = startCoordX - moveEvt.clientX;
-      startCoordX = moveEvt.clientX;
-
-      var coordX = parseInt(getComputedStyle(effectLevelPin).left, 10);
-
-      if (coordX <= 0) {
-        moveSlider(0);
-      } else if (coordX >= effectLevelLineWidth) {
+      if (effectLevelLineCoords.right < startCoordX) {
         moveSlider(100);
+      } else if (effectLevelLineCoords.left > startCoordX) {
+        moveSlider(0);
+      } else {
+        var shiftX = startCoordX - moveEvt.clientX;
+        startCoordX = moveEvt.clientX;
+        moveSlider((effectLevelPin.offsetLeft - shiftX) * 100 / effectLevelLineWidth);
+        changeEffectLevel();
       }
-      moveSlider((effectLevelPin.offsetLeft - shiftX) * 100 / effectLevelLineWidth);
-      changeEffectLevel();
     };
 
     var mouseupEffectLevelPin = function () {
@@ -305,7 +303,9 @@ var openUploadImg = function () {
   var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
   effectLevelPin.addEventListener('mousedown', mousedownEffectLevelPin);
 
-  var effectLevelLineWidth = imgUploadOverlay.querySelector('.effect-level__line').offsetWidth;
+  var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
+  var effectLevelLineCoords = effectLevelLine.getBoundingClientRect();
+  var effectLevelLineWidth = effectLevelLine.offsetWidth;
 
   var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
   for (var j = 0; j < effectsRadio.length; j++) {
