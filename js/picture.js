@@ -1,7 +1,7 @@
 'use strict';
 
 var generateNodeOfPicture = function (pictureElement, picture, bigPictureTemplate) {
-  var onBigPictureClick = function (evt) {
+  var onPictureClick = function (evt) {
     evt.preventDefault();
     window.preview(bigPictureTemplate, picture);
   };
@@ -10,7 +10,7 @@ var generateNodeOfPicture = function (pictureElement, picture, bigPictureTemplat
   pictureElement.querySelector('.picture__likes').textContent = picture.countOfLikes;
   pictureElement.querySelector('.picture__comments').textContent = picture.countOfComments;
 
-  pictureElement.querySelector('.picture').addEventListener('click', onBigPictureClick);
+  pictureElement.querySelector('.picture').addEventListener('click', onPictureClick);
   return pictureElement;
 };
 
@@ -28,5 +28,5 @@ var addPicturesInFragment = function (pictures) {
 
 
 var arrayOfPictures = window.data();
-var containerForPicturesElement = document.querySelector('.pictures');
-containerForPicturesElement.appendChild(addPicturesInFragment(arrayOfPictures));
+var picturesContainerElement = document.querySelector('.pictures');
+picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
