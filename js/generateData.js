@@ -50,7 +50,7 @@
     return commentObject;
   };
 
-  window.data = function () {
+  window.generateData = function () {
     var arrayOfPictures = [];
 
     for (var i = 0; i < COUNT_OF_PICTURES; i++) {

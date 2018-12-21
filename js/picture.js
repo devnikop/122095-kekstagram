@@ -28,7 +28,7 @@
   };
 
 
-  var arrayOfPictures = window.data();
+  var arrayOfPictures = window.generateData();
   var picturesContainerElement = document.querySelector('.pictures');
   picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
 })();
