@@ -148,8 +148,21 @@
       }
     };
 
+    var successHandler = function () {
+      closeUploadImg();
+    };
+
+    var errorHandler = function () {
+
+    };
+
     var imgUploadOverlayTemplate = document.querySelector('.img-upload__overlay-template').content.cloneNode(true);
     var imgUploadFormElement = document.querySelector('.img-upload__form');
+    imgUploadFormElement.addEventListener('submit', function (evt) {
+      window.backend.save(new FormData(imgUploadFormElement), successHandler, errorHandler);
+      evt.preventDefault();
+    });
+
     imgUploadFormElement.appendChild(imgUploadOverlayTemplate);
     var imgUploadOverlayElement = imgUploadFormElement.querySelector('.img-upload__overlay');
 
