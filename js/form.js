@@ -149,11 +149,54 @@
     };
 
     var successHandler = function () {
+      var closeSuccessWindow = function () {
+        document.querySelector('.success').remove();
+        document.removeEventListener('keydown', onSuccessWindowEscPress);
+        document.removeEventListener('click', closeSuccessWindow);
+      };
+
+      var onSuccessWindowEscPress = function (evt) {
+        if (evt.keyCode === 27) {
+          closeSuccessWindow();
+        }
+      };
+
       closeUploadImg();
+
+      var successTemplate = document.querySelector('#success').content.cloneNode(true);
+      var successButton = successTemplate.querySelector('.success__button');
+      successButton.addEventListener('click', closeSuccessWindow);
+      document.addEventListener('keydown', onSuccessWindowEscPress);
+      document.addEventListener('click', closeSuccessWindow);
+
+      document.querySelector('main').appendChild(successTemplate);
     };
 
-    var errorHandler = function () {
+    var errorHandler = function (errorMessage) {
+      var closeErrorWindow = function () {
+        document.querySelector('.error').remove();
+        document.removeEventListener('keydown', onErrorWindowEscPress);
+        document.removeEventListener('click', closeErrorWindow);
+      };
 
+      var onErrorWindowEscPress = function (evt) {
+        if (evt.keyCode === 27) {
+          closeErrorWindow();
+        }
+      };
+
+      closeUploadImg();
+
+      var errorTemplate = document.querySelector('#error').content.cloneNode(true);
+      errorTemplate.querySelector('.error__title').textContent = errorMessage;
+      var errorButtons = errorTemplate.querySelectorAll('.error__button');
+      for (var i = 0; i < errorButtons.length; i++) {
+        errorButtons[i].addEventListener('click', closeErrorWindow);
+      }
+      document.addEventListener('keydown', onErrorWindowEscPress);
+      document.addEventListener('click', closeErrorWindow);
+
+      document.querySelector('main').appendChild(errorTemplate);
     };
 
     var imgUploadOverlayTemplate = document.querySelector('.img-upload__overlay-template').content.cloneNode(true);

@@ -33,9 +33,9 @@
     picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
   };
 
-  var ErrorHandler = function () {
+  var errorHandler = function () {
 
   };
 
-  window.backend.load(successHandler, ErrorHandler);
+  window.backend.load(successHandler, errorHandler);
 })();
