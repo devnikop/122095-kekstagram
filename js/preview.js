@@ -17,8 +17,8 @@
   var addBigPicture = function (bigPictureElement, picture) {
     bigPictureElement.querySelector('.big-picture__img img').src = picture.url;
     bigPictureElement.querySelector('.social__caption').textContent = picture.description;
-    bigPictureElement.querySelector('.likes-count').textContent = picture.countOfLikes;
-    bigPictureElement.querySelector('.comments-count').textContent = picture.countOfComments;
+    bigPictureElement.querySelector('.likes-count').textContent = picture.likes;
+    bigPictureElement.querySelector('.comments-count').textContent = picture.comments.length;
 
     var comentsContainerElement = bigPictureElement.querySelector('.social__comments');
     while (comentsContainerElement.firstChild) {
