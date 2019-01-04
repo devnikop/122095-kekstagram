@@ -163,8 +163,6 @@
 
       closeUploadImg();
 
-      var successTemplate = document.querySelector('#success').content.cloneNode(true);
-      var successButton = successTemplate.querySelector('.success__button');
       successButton.addEventListener('click', closeSuccessWindow);
       document.addEventListener('keydown', onSuccessWindowEscPress);
       document.addEventListener('click', closeSuccessWindow);
@@ -187,9 +185,7 @@
 
       closeUploadImg();
 
-      var errorTemplate = document.querySelector('#error').content.cloneNode(true);
       errorTemplate.querySelector('.error__title').textContent = errorMessage;
-      var errorButtons = errorTemplate.querySelectorAll('.error__button');
       for (var i = 0; i < errorButtons.length; i++) {
         errorButtons[i].addEventListener('click', closeErrorWindow);
       }
@@ -201,6 +197,12 @@
 
     var imgUploadOverlayTemplate = document.querySelector('.img-upload__overlay-template').content.cloneNode(true);
     var imgUploadFormElement = document.querySelector('.img-upload__form');
+
+    var successTemplate = document.querySelector('#success').content.cloneNode(true);
+    var successButton = successTemplate.querySelector('.success__button');
+    var errorTemplate = document.querySelector('#error').content.cloneNode(true);
+    var errorButtons = errorTemplate.querySelectorAll('.error__button');
+
     imgUploadFormElement.addEventListener('submit', function (evt) {
       window.backend.save(new FormData(imgUploadFormElement), successHandler, errorHandler);
       evt.preventDefault();
