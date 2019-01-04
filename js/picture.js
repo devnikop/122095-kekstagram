@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  var generateNodeOfPicture = function (pictureElement, picture, bigPictureTemplate) {
+  var generateNodeOfPicture = function (pictureElement, picture) {
     var onPictureClick = function (evt) {
       evt.preventDefault();
-      window.preview(bigPictureTemplate, picture);
+      window.preview(picture);
     };
 
     pictureElement.querySelector('.picture__img').src = picture.url;
@@ -20,7 +20,7 @@
 
     for (var i = 0; i < pictures.length; i++) {
       var pictureElement = pictureTemplate.cloneNode(true);
-      fragment.appendChild(generateNodeOfPicture(pictureElement, pictures[i], bigPictureTemplate));
+      fragment.appendChild(generateNodeOfPicture(pictureElement, pictures[i]));
     }
     return fragment;
   };
@@ -91,7 +91,6 @@
   discussedButton.addEventListener('click', onClickDiscussedButton);
 
   var pictureTemplate = document.querySelector('#picture').content;
-  var bigPictureTemplate = document.querySelector('.big-picture-template').content;
 
   window.backend.load(successHandler, errorHandler);
 })();
