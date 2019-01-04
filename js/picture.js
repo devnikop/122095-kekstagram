@@ -42,9 +42,18 @@
     });
   };
 
+  var changeButtonClass = function (currentButton) {
+    var filterButtons = imgFilters.querySelectorAll('.img-filters__button');
+    [].forEach.call(filterButtons, function (button) {
+      button.classList.remove('img-filters__button--active');
+    });
+    currentButton.classList.add('img-filters__button--active');
+  };
+
   var onClickPopularButton = function () {
     picturesDelete();
     picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
+    changeButtonClass(pupularButton);
   };
 
   var onClickNewButton = function () {
@@ -57,6 +66,7 @@
       }
     }
     picturesContainerElement.appendChild(addPicturesInFragment(uniquePictures));
+    changeButtonClass(newButton);
   };
 
   var onClickDiscussedButton = function () {
@@ -75,6 +85,7 @@
         }
       });
     picturesContainerElement.appendChild(addPicturesInFragment(discussedPictures));
+    changeButtonClass(discussedButton);
   };
 
   var arrayOfPictures = [];
