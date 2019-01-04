@@ -3,8 +3,10 @@
 (function () {
   var SUCCESS_OK = 200;
   var TIMEOUT = 10000;
-  var LOAD_URL = 'https://js.dump.academy/kekstagram/data';
-  var SAVE_URL = 'https://js.dump.academy/kekstagram';
+  var Url = {
+    LOAD: 'https://js.dump.academy/kekstagram/data',
+    SAVE: 'https://js.dump.academy/kekstagram'
+  };
 
   window.backend = {
     load: function (onLoad, onError) {
@@ -27,7 +29,7 @@
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
-      xhr.open('GET', LOAD_URL);
+      xhr.open('GET', Url.LOAD);
       xhr.send();
     },
     save: function (data, onLoad, onError) {
@@ -52,7 +54,7 @@
 
       xhr.timeout = TIMEOUT;
 
-      xhr.open('POST', SAVE_URL);
+      xhr.open('POST', Url.SAVE);
       xhr.send(data);
     }
   };

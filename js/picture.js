@@ -82,13 +82,19 @@
   var imgFilters = document.querySelector('.img-filters');
 
   var pupularButton = imgFilters.querySelector('#filter-popular');
-  pupularButton.addEventListener('click', onClickPopularButton);
+  pupularButton.addEventListener('click', function () {
+    window.debounce(onClickPopularButton);
+  });
 
   var newButton = imgFilters.querySelector('#filter-new');
-  newButton.addEventListener('click', onClickNewButton);
+  newButton.addEventListener('click', function () {
+    window.debounce(onClickNewButton);
+  });
 
   var discussedButton = imgFilters.querySelector('#filter-discussed');
-  discussedButton.addEventListener('click', onClickDiscussedButton);
+  discussedButton.addEventListener('click', function () {
+    window.debounce(onClickDiscussedButton);
+  });
 
   var pictureTemplate = document.querySelector('#picture').content;
 

@@ -17,7 +17,7 @@
     comentsContainerElement.appendChild(fragment);
 
     if ((commentsCount === comentsContainerElement.childElementCount)) {
-      document.querySelector('.comments-loader').remove();
+      document.querySelector('.comments-loader').classList.add('hidden');
     }
 
     bigPictureElement.querySelector('.comments-shown').textContent = comentsContainerElement.childElementCount;
