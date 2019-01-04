@@ -26,7 +26,8 @@
   };
 
   var successHandler = function (pictures) {
-    picturesContainerElement.appendChild(addPicturesInFragment(pictures));
+    arrayOfPictures = pictures;
+    picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
     imgFilters.classList.remove('img-filters--inactive');
   };
 
@@ -34,8 +35,61 @@
 
   };
 
+  var picturesDelete = function () {
+    var pictureElements = picturesContainerElement.querySelectorAll('.picture');
+    [].forEach.call(pictureElements, function (picture) {
+      picture.remove();
+    });
+  };
+
+  var onClickPopularButton = function () {
+    picturesDelete();
+    picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
+  };
+
+  var onClickNewButton = function () {
+    picturesDelete();
+    var uniquePictures = [];
+    while (uniquePictures.length < 10) {
+      var result = arrayOfPictures[Math.floor(Math.random() * arrayOfPictures.length)];
+      if (uniquePictures.indexOf(result) === -1) {
+        uniquePictures.push(result);
+      }
+    }
+    picturesContainerElement.appendChild(addPicturesInFragment(uniquePictures));
+  };
+
+  var onClickDiscussedButton = function () {
+    picturesDelete();
+    var discussedPictures = arrayOfPictures
+      .slice()
+      .sort(function (fisrtElement, secondElement) {
+        var first = fisrtElement.comments.length;
+        var second = secondElement.comments.length;
+        if (first > second) {
+          return -1;
+        } else if (first < second) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    picturesContainerElement.appendChild(addPicturesInFragment(discussedPictures));
+  };
+
+  var arrayOfPictures = [];
   var picturesContainerElement = document.querySelector('.pictures');
   var imgFilters = document.querySelector('.img-filters');
+
+  var pupularButton = imgFilters.querySelector('#filter-popular');
+  pupularButton.addEventListener('click', onClickPopularButton);
+
+  var newButton = imgFilters.querySelector('#filter-new');
+  newButton.addEventListener('click', onClickNewButton);
+
+  var discussedButton = imgFilters.querySelector('#filter-discussed');
+  discussedButton.addEventListener('click', onClickDiscussedButton);
+
   var pictureTemplate = document.querySelector('#picture').content;
   var bigPictureTemplate = document.querySelector('.big-picture-template').content;
 
