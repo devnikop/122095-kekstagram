@@ -17,8 +17,6 @@
 
   var addPicturesInFragment = function (pictures) {
     var fragment = document.createDocumentFragment();
-    var pictureTemplate = document.querySelector('#picture').content;
-    var bigPictureTemplate = document.querySelector('.big-picture-template').content;
 
     for (var i = 0; i < pictures.length; i++) {
       var pictureElement = pictureTemplate.cloneNode(true);
@@ -28,14 +26,18 @@
   };
 
   var successHandler = function (pictures) {
-    var arrayOfPictures = pictures;
-    var picturesContainerElement = document.querySelector('.pictures');
-    picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
+    picturesContainerElement.appendChild(addPicturesInFragment(pictures));
+    imgFilters.classList.remove('img-filters--inactive');
   };
 
   var errorHandler = function () {
 
   };
+
+  var picturesContainerElement = document.querySelector('.pictures');
+  var imgFilters = document.querySelector('.img-filters');
+  var pictureTemplate = document.querySelector('#picture').content;
+  var bigPictureTemplate = document.querySelector('.big-picture-template').content;
 
   window.backend.load(successHandler, errorHandler);
 })();
