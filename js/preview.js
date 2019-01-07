@@ -4,14 +4,16 @@
   var addCommentsInBigPicture = function (pictureComments, commentTemplate, bigPictureElement) {
     var commentsCount = pictureComments.length;
     var comentsContainerElement = document.querySelector('.social__comments');
-    var quantityDifference = commentsCount - comentsContainerElement.childElementCount;
-    var drawCount = quantityDifference > 5 ? 5 : quantityDifference;
+    var countOfDrawnComments = comentsContainerElement.childElementCount;
+    var quantityDifference = commentsCount - countOfDrawnComments;
+    var countToDraw = quantityDifference > 5 ? 5 : quantityDifference;
 
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < drawCount; i++) {
+    for (var i = 0; i < countToDraw; i++) {
+      var j = countOfDrawnComments + i;
       var commentElement = commentTemplate.cloneNode(true);
-      commentElement.querySelector('.social__picture').src = pictureComments[i].avatar;
-      commentElement.querySelector('.social__text').textContent = pictureComments[i].message;
+      commentElement.querySelector('.social__picture').src = pictureComments[j].avatar;
+      commentElement.querySelector('.social__text').textContent = pictureComments[j].message;
       fragment.appendChild(commentElement);
     }
     comentsContainerElement.appendChild(fragment);
