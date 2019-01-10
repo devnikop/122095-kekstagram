@@ -118,33 +118,32 @@
 
     var hashtagValidate = function () {
       var hashtagsArray = textHashtagsElement.value.trim().toLowerCase().split(' ');
-      if (hashtagsArray[0] !== '') {
-        if (hashtagsArray.length > 5) {
-          setInvalid('Нельзя указать больше пяти хэш-тегов');
-        } else {
-          for (var i = 0; i < hashtagsArray.length; i++) {
-            if (hashtagsArray[i].charAt(0) !== '#') {
-              setInvalid('Хэш-тег должен начинаться с символа #');
-              break;
-            } else if (hashtagsArray[i].charAt(1) === '') {
-              setInvalid('Хэш-тег не может состоять только из одной решётки');
-              break;
-            } else if (hashtagsArray.indexOf(hashtagsArray[i], i + 1) !== -1) {
-              setInvalid('Один и тот же хэш-тег не может быть использован дважды');
-              break;
-            } else if (hashtagsArray[i].indexOf('#', 1) !== -1) {
-              setInvalid('Хэш-тег не должен содержать более одного символа #');
-              break;
-            } else if (hashtagsArray[i].length > 20) {
-              setInvalid('Максимальная длина одного хэш-тега 20 символов, включая решётку');
-              break;
-            } else {
-              setValid();
-            }
+
+      if (hashtagsArray[0] === '') {
+        setValid();
+      } else if (hashtagsArray.length > 5) {
+        setInvalid('Нельзя указать больше пяти хэш-тегов');
+      } else {
+        for (var i = 0; i < hashtagsArray.length; i++) {
+          if (hashtagsArray[i].charAt(0) !== '#') {
+            setInvalid('Хэш-тег должен начинаться с символа #');
+            break;
+          } else if (hashtagsArray[i].charAt(1) === '') {
+            setInvalid('Хэш-тег не может состоять только из одной решётки');
+            break;
+          } else if (hashtagsArray.indexOf(hashtagsArray[i], i + 1) !== -1) {
+            setInvalid('Один и тот же хэш-тег не может быть использован дважды');
+            break;
+          } else if (hashtagsArray[i].indexOf('#', 1) !== -1) {
+            setInvalid('Хэш-тег не должен содержать более одного символа #');
+            break;
+          } else if (hashtagsArray[i].length > 20) {
+            setInvalid('Максимальная длина одного хэш-тега 20 символов, включая решётку');
+            break;
+          } else {
+            setValid();
           }
         }
-      } else {
-        setValid();
       }
     };
 
