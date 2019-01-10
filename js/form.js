@@ -185,9 +185,10 @@
       closeUploadImg();
 
       errorTemplate.querySelector('.error__title').textContent = errorMessage;
-      for (var i = 0; i < errorButtons.length; i++) {
-        errorButtons[i].addEventListener('click', closeErrorWindow);
-      }
+
+      errorButtons.forEach(function (errorButton) {
+        errorButton.addEventListener('click', closeErrorWindow);
+      });
       document.addEventListener('keydown', onErrorWindowEscPress);
       document.addEventListener('click', closeErrorWindow);
 

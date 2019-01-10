@@ -18,10 +18,10 @@
   var addPicturesInFragment = function (pictures) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pictures.length; i++) {
+    pictures.forEach(function (picture) {
       var pictureElement = pictureTemplate.cloneNode(true);
-      fragment.appendChild(generateNodeOfPicture(pictureElement, pictures[i]));
-    }
+      fragment.appendChild(generateNodeOfPicture(pictureElement, picture));
+    });
     return fragment;
   };
 
@@ -109,6 +109,5 @@
   }));
 
   var pictureTemplate = document.querySelector('#picture').content;
-
   window.backend.load(successHandler, errorHandler);
 })();
