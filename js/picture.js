@@ -2,7 +2,7 @@
 
 (function () {
   var generateNodeOfPicture = function (pictureElement, picture) {
-    var onPictureClick = function (evt) {
+    var pictureClickHandler = function (evt) {
       evt.preventDefault();
       window.preview(picture);
     };
@@ -11,14 +11,14 @@
     pictureElement.querySelector('.picture__likes').textContent = picture.likes;
     pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
-    pictureElement.querySelector('.picture').addEventListener('click', onPictureClick);
+    pictureElement.querySelector('.picture').addEventListener('click', pictureClickHandler);
     return pictureElement;
   };
 
-  var addPicturesInFragment = function (pictures) {
+  var addPicturesInFragment = function (picturesArray) {
     var fragment = document.createDocumentFragment();
 
-    pictures.forEach(function (picture) {
+    picturesArray.forEach(function (picture) {
       var pictureElement = pictureTemplate.cloneNode(true);
       fragment.appendChild(generateNodeOfPicture(pictureElement, picture));
     });
@@ -26,9 +26,9 @@
   };
 
   var successHandler = function (pictures) {
-    arrayOfPictures = pictures;
-    picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
-    imgFilters.classList.remove('img-filters--inactive');
+    picturesArray = pictures;
+    picturesContainerElement.appendChild(addPicturesInFragment(picturesArray));
+    imgFilterElement.classList.remove('img-filters--inactive');
   };
 
   var errorHandler = function () {
@@ -42,34 +42,34 @@
     });
   };
 
-  var arrayOfPictures = [];
+  var picturesArray = [];
   var picturesContainerElement = document.querySelector('.pictures');
-  var imgFilters = document.querySelector('.img-filters');
+  var imgFilterElement = document.querySelector('.img-filters');
 
   var filterButton = {
-    popular: imgFilters.querySelector('#filter-popular'),
-    new: imgFilters.querySelector('#filter-new'),
-    discussed: imgFilters.querySelector('#filter-discussed'),
+    popular: imgFilterElement.querySelector('#filter-popular'),
+    new: imgFilterElement.querySelector('#filter-new'),
+    discussed: imgFilterElement.querySelector('#filter-discussed'),
 
     changeClass: function (currentButton) {
-      var filterButtons = imgFilters.querySelectorAll('.img-filters__button');
+      var filterButtons = imgFilterElement.querySelectorAll('.img-filters__button');
       [].forEach.call(filterButtons, function (button) {
         button.classList.remove('img-filters__button--active');
       });
       currentButton.classList.add('img-filters__button--active');
     },
 
-    onClickPopular: function () {
+    popularClickHandler: function () {
       picturesDelete();
-      picturesContainerElement.appendChild(addPicturesInFragment(arrayOfPictures));
+      picturesContainerElement.appendChild(addPicturesInFragment(picturesArray));
       this.changeClass(this.popular);
     },
 
-    onClickNew: function () {
+    newClickHandler: function () {
       picturesDelete();
       var uniquePictures = [];
       while (uniquePictures.length < 10) {
-        var result = arrayOfPictures[Math.floor(Math.random() * arrayOfPictures.length)];
+        var result = picturesArray[Math.floor(Math.random() * picturesArray.length)];
         if (uniquePictures.indexOf(result) === -1) {
           uniquePictures.push(result);
         }
@@ -78,9 +78,9 @@
       this.changeClass(this.new);
     },
 
-    onClickDiscussed: function () {
+    discussedClickHandler: function () {
       picturesDelete();
-      var discussedPictures = arrayOfPictures
+      var discussedPictures = picturesArray
         .slice()
         .sort(function (fisrtElement, secondElement) {
           var first = fisrtElement.comments.length;
@@ -99,13 +99,13 @@
   };
 
   filterButton.popular.addEventListener('click', window.debounce(function () {
-    filterButton.onClickPopular();
+    filterButton.popularClickHandler();
   }));
   filterButton.new.addEventListener('click', window.debounce(function () {
-    filterButton.onClickNew();
+    filterButton.newClickHandler();
   }));
   filterButton.discussed.addEventListener('click', window.debounce(function () {
-    filterButton.onClickDiscussed();
+    filterButton.discussedClickHandler();
   }));
 
   var pictureTemplate = document.querySelector('#picture').content;
