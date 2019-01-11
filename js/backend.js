@@ -10,39 +10,37 @@
 
   window.backend = {
     load: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      xhr.addEventListener('load', function () {
+      var contentLoadHandler = function () {
         if (xhr.status === SUCCESS_OK) {
           onLoad(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
         }
-      });
+      };
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+
+      xhr.addEventListener('load', contentLoadHandler);
 
       xhr.addEventListener('error', function () {
         onError('Произошла ошибка соединения');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       });
 
       xhr.open('GET', Url.LOAD);
       xhr.send();
     },
     save: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      xhr.addEventListener('load', function () {
+      var dataLoadHandler = function () {
         if (xhr.status === SUCCESS_OK) {
           onLoad(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
         }
-      });
+      };
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+
+      xhr.addEventListener('load', dataLoadHandler);
 
       xhr.addEventListener('error', function () {
         onError('Произошла ошибка соединения');

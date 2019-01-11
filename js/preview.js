@@ -18,7 +18,7 @@
     }
     comentsContainerElement.appendChild(fragment);
 
-    if ((commentsCount === comentsContainerElement.childElementCount)) {
+    if (commentsCount === comentsContainerElement.childElementCount) {
       document.querySelector('.comments-loader').classList.add('hidden');
     }
 
@@ -33,19 +33,21 @@
   };
 
   window.preview = function (picture) {
-    var closeBigPicture = function () {
+    var bigPictureClose = function () {
       bigPictureElement.remove();
-      document.removeEventListener('keydown', onBigPictureEscPress);
+      document.removeEventListener('keydown', bigPictureEscPressHandler);
       document.body.classList.remove('modal-open');
     };
 
-    var onBigPictureEscPress = function (evt) {
-      if (evt.keyCode === 27) {
-        closeBigPicture();
-      }
+    var bitPictureCancelClickHandler = function () {
+      bigPictureClose();
     };
 
-    var onClickCommentsLoaderButton = function () {
+    var bigPictureEscPressHandler = function (evt) {
+      window.keyboard.isEscPressed(evt, bigPictureClose);
+    };
+
+    var commentsLoaderClickHandler = function () {
       addCommentsInBigPicture(picture.comments, commentTemplate, bigPictureElement);
     };
 
@@ -56,14 +58,14 @@
 
     var commentTemplate = document.querySelector('#comment').content;
 
-    var commentsLoaderButton = bigPictureElement.querySelector('.comments-loader');
-    commentsLoaderButton.addEventListener('click', onClickCommentsLoaderButton);
+    var commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+    commentsLoaderElement.addEventListener('click', commentsLoaderClickHandler);
 
     addBigPicture(bigPictureElement, picture);
     addCommentsInBigPicture(picture.comments, commentTemplate, bigPictureElement);
 
     var bigPictureCancelElement = bigPictureElement.querySelector('.big-picture__cancel');
-    bigPictureCancelElement.addEventListener('click', closeBigPicture);
-    document.addEventListener('keydown', onBigPictureEscPress);
+    bigPictureCancelElement.addEventListener('click', bitPictureCancelClickHandler);
+    document.addEventListener('keydown', bigPictureEscPressHandler);
   };
 })();
