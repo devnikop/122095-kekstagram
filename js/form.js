@@ -68,7 +68,7 @@
         imgUploadPreviewElement.style.filter = effectsListMap[imgUploadPreviewElement.className] + '(' + effectLevel + ')';
       };
 
-      var EffectLevelPinMousemoveHandler = function (moveEvt) {
+      var effectLevelPinMousemoveHandler = function (moveEvt) {
         moveEvt.preventDefault();
 
         if (effectLevelLineCoords.right < startCoordX) {
@@ -83,15 +83,15 @@
         }
       };
 
-      var EffectLevelPinMouseupHandler = function () {
+      var effectLevelPinMouseupHandler = function () {
         changeEffectLevel();
-        document.removeEventListener('mousemove', EffectLevelPinMousemoveHandler);
-        document.removeEventListener('mouseup', EffectLevelPinMouseupHandler);
+        document.removeEventListener('mousemove', effectLevelPinMousemoveHandler);
+        document.removeEventListener('mouseup', effectLevelPinMouseupHandler);
       };
 
       var startCoordX = evt.clientX;
-      document.addEventListener('mousemove', EffectLevelPinMousemoveHandler);
-      document.addEventListener('mouseup', EffectLevelPinMouseupHandler);
+      document.addEventListener('mousemove', effectLevelPinMousemoveHandler);
+      document.addEventListener('mouseup', effectLevelPinMouseupHandler);
     };
 
     var uploadImgClose = function () {
