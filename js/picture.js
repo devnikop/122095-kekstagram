@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var UNIQUE_PICTURES_COUNT = 10;
+
   var generateNodeOfPicture = function (pictureElement, picture) {
     var pictureClickHandler = function (evt) {
       evt.preventDefault();
@@ -37,7 +39,7 @@
 
   var picturesDelete = function () {
     var pictureElements = picturesContainerElement.querySelectorAll('.picture');
-    [].forEach.call(pictureElements, function (picture) {
+    pictureElements.forEach(function (picture) {
       picture.remove();
     });
   };
@@ -50,10 +52,10 @@
     popular: imgFilterElement.querySelector('#filter-popular'),
     new: imgFilterElement.querySelector('#filter-new'),
     discussed: imgFilterElement.querySelector('#filter-discussed'),
+    filterButtons: imgFilterElement.querySelectorAll('.img-filters__button'),
 
     changeClass: function (currentButton) {
-      var filterButtons = imgFilterElement.querySelectorAll('.img-filters__button');
-      [].forEach.call(filterButtons, function (button) {
+      this.filterButtons.forEach(function (button) {
         button.classList.remove('img-filters__button--active');
       });
       currentButton.classList.add('img-filters__button--active');
@@ -68,7 +70,7 @@
     newClickHandler: function () {
       picturesDelete();
       var uniquePictures = [];
-      while (uniquePictures.length < 10) {
+      while (uniquePictures.length < UNIQUE_PICTURES_COUNT) {
         var result = picturesArray[Math.floor(Math.random() * picturesArray.length)];
         if (uniquePictures.indexOf(result) === -1) {
           uniquePictures.push(result);
@@ -89,9 +91,8 @@
             return -1;
           } else if (first < second) {
             return 1;
-          } else {
-            return 0;
           }
+          return 0;
         });
       picturesContainerElement.appendChild(addPicturesInFragment(discussedPictures));
       this.changeClass(this.discussed);

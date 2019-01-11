@@ -1,6 +1,14 @@
 'use strict';
 
 (function () {
+  var SCALE_MIN = 25;
+  var SCALE_MAX = 100;
+  var SCALE_STEP = 25;
+  var HASHTAGS_COUNT = 5;
+  var HASHTAG_LENGTH = 20;
+  var SLIDER_MAX = 100;
+  var SLIDER_MIN = 0;
+
   var uploadFileChangeHandler = function () {
     var moveSlider = function (pinCoord) {
       effectLevelPinElement.style.left = pinCoord + '%';
@@ -16,7 +24,7 @@
         imgUploadPreviewElement.className = '';
         imgUploadPreviewElement.style.filter = '';
         imgUploadPreviewElement.classList.add(effectsPreviewElement.classList[1]);
-        moveSlider(100);
+        moveSlider(SLIDER_MAX);
 
         var effectLevelElement = imgUploadOverlayElement.querySelector('.effect-level');
         if (imgUploadPreviewElement.classList.contains('effects__preview--none')) {
@@ -55,9 +63,9 @@
         moveEvt.preventDefault();
 
         if (effectLevelLineCoords.right < startCoordX) {
-          moveSlider(100);
+          moveSlider(SLIDER_MAX);
         } else if (effectLevelLineCoords.left > startCoordX) {
-          moveSlider(0);
+          moveSlider(SLIDER_MIN);
         } else {
           var shiftX = startCoordX - moveEvt.clientX;
           startCoordX = moveEvt.clientX;
@@ -83,6 +91,10 @@
       document.removeEventListener('keydown', uploadImgEscPressHandler);
     };
 
+    var imgUploadCancelClickHandler = function () {
+      uploadImgClose();
+    };
+
     var uploadImgEscPressHandler = function (evt) {
       window.keyboard.isEscPressed(evt, uploadImgClose);
     };
@@ -93,15 +105,15 @@
     };
 
     var zoomOutClickHandler = function () {
-      if (scaleControlValue > 25 && scaleControlValue <= 100) {
-        scaleControlValue -= 25;
+      if (scaleControlValue > SCALE_MIN && scaleControlValue <= SCALE_MAX) {
+        scaleControlValue -= SCALE_STEP;
         updateUploadImageScale();
       }
     };
 
     var zoomInClickHandler = function () {
-      if (scaleControlValue >= 25 && scaleControlValue < 100) {
-        scaleControlValue += 25;
+      if (scaleControlValue >= SCALE_MIN && scaleControlValue < SCALE_MAX) {
+        scaleControlValue += SCALE_STEP;
         updateUploadImageScale();
       }
     };
@@ -121,7 +133,7 @@
 
       if (hashtagsArray[0] === '') {
         setValid();
-      } else if (hashtagsArray.length > 5) {
+      } else if (hashtagsArray.length > HASHTAGS_COUNT) {
         setInvalid('Нельзя указать больше пяти хэш-тегов');
       } else {
         for (var i = 0; i < hashtagsArray.length; i++) {
@@ -137,7 +149,7 @@
           } else if (hashtagsArray[i].indexOf('#', 1) !== -1) {
             setInvalid('Хэш-тег не должен содержать более одного символа #');
             break;
-          } else if (hashtagsArray[i].length > 20) {
+          } else if (hashtagsArray[i].length > HASHTAG_LENGTH) {
             setInvalid('Максимальная длина одного хэш-тега 20 символов, включая решётку');
             break;
           } else {
@@ -154,13 +166,17 @@
         document.removeEventListener('click', successWindowClose);
       };
 
+      var successButtonClickHandler = function () {
+        successWindowClose();
+      };
+
       var successWindowEscPressHandler = function (evt) {
         window.keyboard.isEscPressed(evt, successWindowClose);
       };
 
       uploadImgClose();
 
-      successButtonElement.addEventListener('click', successWindowClose);
+      successButtonElement.addEventListener('click', successButtonClickHandler);
       document.addEventListener('keydown', successWindowEscPressHandler);
       document.addEventListener('click', successWindowClose);
 
@@ -180,7 +196,8 @@
 
       uploadImgClose();
 
-      errorTemplate.querySelector('.error__title').textContent = errorMessage;
+      var errorElement = errorTemplate.cloneNode(true);
+      errorElement.querySelector('.error__title').textContent = errorMessage;
 
       errorButtonElements.forEach(function (errorButton) {
         errorButton.addEventListener('click', errorWindowClose);
@@ -188,7 +205,7 @@
       document.addEventListener('keydown', errorWindowEscPressHandler);
       document.addEventListener('click', errorWindowClose);
 
-      document.querySelector('main').appendChild(errorTemplate);
+      document.querySelector('main').appendChild(errorElement);
     };
 
     var textHashtagEscPressHandler = function (evt) {
@@ -204,7 +221,7 @@
 
     var successTemplate = document.querySelector('#success').content.cloneNode(true);
     var successButtonElement = successTemplate.querySelector('.success__button');
-    var errorTemplate = document.querySelector('#error').content.cloneNode(true);
+    var errorTemplate = document.querySelector('#error').content;
     var errorButtonElements = errorTemplate.querySelectorAll('.error__button');
 
     imgUploadFormElement.addEventListener('submit', function (evt) {
@@ -224,16 +241,16 @@
     var effectLevelLineWidth = effectLevelLineElement.offsetWidth;
 
     var effectsRadioElements = imgUploadOverlayElement.querySelectorAll('.effects__radio');
-    for (var j = 0; j < effectsRadioElements.length; j++) {
-      onChangeEffect(effectsRadioElements[j]);
-    }
+    effectsRadioElements.forEach(function (element) {
+      onChangeEffect(element);
+    });
 
-    moveSlider(0);
+    moveSlider(SLIDER_MIN);
 
     var imgUploadCancelElement = imgUploadOverlayElement.querySelector('.img-upload__cancel');
     var textHashtagElement = imgUploadOverlayElement.querySelector('.text__hashtags');
     var textDescriptionElement = imgUploadOverlayElement.querySelector('.text__description');
-    imgUploadCancelElement.addEventListener('click', uploadImgClose);
+    imgUploadCancelElement.addEventListener('click', imgUploadCancelClickHandler);
     document.addEventListener('keydown', uploadImgEscPressHandler);
     textHashtagElement.addEventListener('input', hashtagInputHandler);
     textHashtagElement.addEventListener('keydown', textHashtagEscPressHandler);

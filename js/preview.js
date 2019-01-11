@@ -33,14 +33,18 @@
   };
 
   window.preview = function (picture) {
-    var bigPictureCancelClickHandler = function () {
+    var bigPictureClose = function () {
       bigPictureElement.remove();
       document.removeEventListener('keydown', bigPictureEscPressHandler);
       document.body.classList.remove('modal-open');
     };
 
+    var bitPictureCancelClickHandler = function () {
+      bigPictureClose();
+    };
+
     var bigPictureEscPressHandler = function (evt) {
-      window.keyboard.isEscPressed(evt, bigPictureCancelClickHandler);
+      window.keyboard.isEscPressed(evt, bigPictureClose);
     };
 
     var commentsLoaderClickHandler = function () {
@@ -61,7 +65,7 @@
     addCommentsInBigPicture(picture.comments, commentTemplate, bigPictureElement);
 
     var bigPictureCancelElement = bigPictureElement.querySelector('.big-picture__cancel');
-    bigPictureCancelElement.addEventListener('click', bigPictureCancelClickHandler);
+    bigPictureCancelElement.addEventListener('click', bitPictureCancelClickHandler);
     document.addEventListener('keydown', bigPictureEscPressHandler);
   };
 })();

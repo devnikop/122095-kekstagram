@@ -6,7 +6,7 @@
   var fileChooserChangeHandler = function () {
     var fileLoadHandler = function () {
       uploadImageElement.src = reader.result;
-      [].forEach.call(effectsPreviewElements, function (element) {
+      effectsPreviewElements.forEach(function (element) {
         element.style.backgroundImage = 'url(' + reader.result + ')';
       });
     };
