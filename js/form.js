@@ -71,9 +71,9 @@
       var effectLevelPinMousemoveHandler = function (moveEvt) {
         moveEvt.preventDefault();
 
-        if (effectLevelLineCoords.right < startCoordX) {
+        if (effectLevelLineCoords.right + effectLevelPinHalfWidth < startCoordX) {
           moveSlider(SLIDER_MAX);
-        } else if (effectLevelLineCoords.left > startCoordX) {
+        } else if (effectLevelLineCoords.left - effectLevelPinHalfWidth > startCoordX) {
           moveSlider(SLIDER_MIN);
         } else {
           var shiftX = startCoordX - moveEvt.clientX;
@@ -251,6 +251,7 @@
 
     var imgUploadPreviewElement = imgUploadOverlayElement.querySelector('.img-upload__preview > img');
     var effectLevelPinElement = imgUploadOverlayElement.querySelector('.effect-level__pin');
+    var effectLevelPinHalfWidth = effectLevelPinElement.offsetWidth / 2;
     effectLevelPinElement.addEventListener('mousedown', effectLevelPinMousedownHandler);
 
     var effectLevelLineElement = imgUploadOverlayElement.querySelector('.effect-level__line');
