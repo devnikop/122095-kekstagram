@@ -8,52 +8,47 @@
     SAVE: 'https://js.dump.academy/kekstagram'
   };
 
+  var Ajax = function () {
+    this.xhr = new XMLHttpRequest();
+    this.xhr.responseType = 'json';
+  };
+
+  Ajax.prototype = {
+    loadHandler: function (onLoad, onError) {
+      this.xhr.addEventListener('load', this.contentLoadHandler.bind(this.xhr, onLoad, onError));
+    },
+
+    contentLoadHandler: function (onLoad, onError) {
+      if (this.status === SUCCESS_OK) {
+        onLoad(this.response);
+      } else {
+        onError('Статус ответа: ' + this.status + ' ' + this.statusText);
+      }
+    },
+
+    errorHandler: function (onError) {
+      this.xhr.addEventListener('error', function () {
+        onError('Произошла ошибка соединения');
+      });
+    }
+  };
+
   window.backend = {
     load: function (onLoad, onError) {
-      var contentLoadHandler = function () {
-        if (xhr.status === SUCCESS_OK) {
-          onLoad(xhr.response);
-        } else {
-          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-        }
-      };
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      xhr.addEventListener('load', contentLoadHandler);
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-
-      xhr.open('GET', Url.LOAD);
-      xhr.send();
+      var loadAjax = new Ajax();
+      loadAjax.loadHandler(onLoad, onError);
+      loadAjax.errorHandler(onError);
+      loadAjax.xhr.open('GET', Url.LOAD);
+      loadAjax.xhr.send();
     },
+
     save: function (data, onLoad, onError) {
-      var dataLoadHandler = function () {
-        if (xhr.status === SUCCESS_OK) {
-          onLoad(xhr.response);
-        } else {
-          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-        }
-      };
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      xhr.addEventListener('load', dataLoadHandler);
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-
-      xhr.timeout = TIMEOUT;
-
-      xhr.open('POST', Url.SAVE);
-      xhr.send(data);
+      var saveAjax = new Ajax();
+      saveAjax.loadHandler(onLoad, onError);
+      saveAjax.errorHandler(onError);
+      saveAjax.xhr.timeout = TIMEOUT;
+      saveAjax.xhr.open('POST', Url.SAVE);
+      saveAjax.xhr.send(data);
     }
   };
 })();
