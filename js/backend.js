@@ -8,47 +8,33 @@
     SAVE: 'https://js.dump.academy/kekstagram'
   };
 
-  var Ajax = function () {
-    this.xhr = new XMLHttpRequest();
-    this.xhr.responseType = 'json';
-  };
-
-  Ajax.prototype = {
-    loadHandler: function (onLoad, onError) {
-      this.xhr.addEventListener('load', this.contentLoadHandler.bind(this.xhr, onLoad, onError));
-    },
-
-    contentLoadHandler: function (onLoad, onError) {
-      if (this.status === SUCCESS_OK) {
-        onLoad(this.response);
+  var createRequest = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.addEventListener('load', function () {
+      if (xhr.status === SUCCESS_OK) {
+        onLoad(xhr.response);
       } else {
-        onError('Статус ответа: ' + this.status + ' ' + this.statusText);
+        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
-    },
-
-    errorHandler: function (onError) {
-      this.xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-    }
+    });
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
+    return xhr;
   };
 
   window.backend = {
     load: function (onLoad, onError) {
-      var loadAjax = new Ajax();
-      loadAjax.loadHandler(onLoad, onError);
-      loadAjax.errorHandler(onError);
-      loadAjax.xhr.open('GET', Url.LOAD);
-      loadAjax.xhr.send();
+      var xhr = createRequest(onLoad, onError);
+      xhr.open('GET', Url.LOAD);
+      xhr.send();
     },
-
     save: function (data, onLoad, onError) {
-      var saveAjax = new Ajax();
-      saveAjax.loadHandler(onLoad, onError);
-      saveAjax.errorHandler(onError);
-      saveAjax.xhr.timeout = TIMEOUT;
-      saveAjax.xhr.open('POST', Url.SAVE);
-      saveAjax.xhr.send(data);
+      var xhr = createRequest(onLoad, onError);
+      xhr.timeout = TIMEOUT;
+      xhr.open('POST', Url.SAVE);
+      xhr.send(data);
     }
   };
 })();
