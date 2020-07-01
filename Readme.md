@@ -10,7 +10,7 @@
 * [General info](#General-info)
 * [Technologies](#Technologies)
 * [Setup](#Setup)
-* [Features](#Features)
+* [Inspiration](#Inspiration)
 * [License](#License)
 
 ## General info
