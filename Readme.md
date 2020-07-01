@@ -11,38 +11,19 @@
 * [Technologies](#Technologies)
 * [Setup](#Setup)
 * [Features](#Features)
+* [License](#License)
 
 ## General info
 
-This web application was created for mastering base js.
+This web application was created for mastering base js. It has no real use.
 
 ## Technologies
 
-* Vanilla js
+* vanilla js
 
 ## Setup
 
-To run this project, install it locally using npm:
-
-### Prerequisites
-
-- Node.js v.12.13.1
-- Npm v.6.12.0
-
-### Installing
-
-```
-npm run install
-npm run start
-```
-
-## Features
-
-* This app has no real use, it was created only to practice with some technologies.
-
-### To do
-
-* nothing to do yet)
+To run this project, open file index.html.
 
 ## Inspiration
 
